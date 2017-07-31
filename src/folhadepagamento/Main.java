@@ -5,13 +5,17 @@
  */
 package folhadepagamento;
 
+import db.EmployeeDAO;
+import db.SnapshotDAO;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import models.Empregado.Empregado;
 
 /**
  *
  * @author lucas
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame implements ISelectUser {
 
     /**
      * Creates new form Main
@@ -30,25 +34,51 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         btnNewEmployee = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnNewEmployee.setText("Novo Empre");
+        btnNewEmployee.setText("Register Employee");
         btnNewEmployee.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewEmployeeActionPerformed(evt);
             }
         });
-        getContentPane().add(btnNewEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        getContentPane().add(btnNewEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
-        setSize(new java.awt.Dimension(616, 519));
+        jButton1.setText("Edit Employee");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 20, -1, -1));
+
+        jButton2.setText("Bater Ponto");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, -1));
+
+        setSize(new java.awt.Dimension(357, 202));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNewEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEmployeeActionPerformed
         new CadastraEmpregado().setVisible(true);
     }//GEN-LAST:event_btnNewEmployeeActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new CadastraEmpregado(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        new SelectUser(this).setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +108,16 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNewEmployee;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void callback(Empregado e) {
+        SnapshotDAO.createSnapshot("Before registering access for user " + e.getName());
+        EmployeeDAO.batePonto(e);
+        JOptionPane.showMessageDialog(null, "Registrado com sucesso");
+    }
+
+    
 }
