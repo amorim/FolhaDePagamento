@@ -23,4 +23,20 @@ public class Horista extends Empregado {
     public void setSalarioPorHora(double salarioPorHora) {
         this.salarioPorHora = salarioPorHora;
     }
+
+    @Override
+    public Double getFee() {
+        return null;
+    }
+ 
+    @Override
+    public Double getPayment() {
+        return salarioPorHora;
+    }
+
+    @Override
+    public int getType() {
+        return 0;
+    }
+   
 }

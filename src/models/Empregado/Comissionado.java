@@ -19,4 +19,13 @@ public class Comissionado extends Assalariado {
     public void setTaxaComissao(double taxaComissao) {
         this.taxaComissao = taxaComissao;
     }
+    
+    @Override
+    public Double getFee() {
+        return taxaComissao;
+    }
+    @Override
+    public int getType() {
+        return 2;
+    }
 }

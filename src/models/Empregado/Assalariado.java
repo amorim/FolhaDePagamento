@@ -5,6 +5,8 @@
  */
 package models.Empregado;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import models.Endereco;
 import models.Usuario;
 
@@ -23,4 +25,20 @@ public class Assalariado extends Empregado {
     public void setSalarioMensal(double salarioMensal) {
         this.salarioMensal = salarioMensal;
     }
+
+    @Override
+    public Double getFee() {
+        return null;
+    }
+
+    @Override
+    public Double getPayment() {
+        return salarioMensal;
+    }
+
+    @Override
+    public int getType() {
+        return 1;
+    }
+
 }

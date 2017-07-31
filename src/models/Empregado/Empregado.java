@@ -1,15 +1,52 @@
 package models.Empregado;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import models.Endereco;
 import models.Usuario;
 
 
-public class Empregado {
-
+public abstract class Empregado {
+    
+    private int id;
     private String name;
     private Endereco endereco;
     private Usuario access_user;
+    private int paymentType;
+    private Integer tuid = null;
+    private Double tufee = null;
     
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getTuid() {
+        return tuid;
+    }
+
+    public void setTuid(Integer tuid) {
+        this.tuid = tuid;
+    }
+
+    public Double getTufee() {
+        return tufee;
+    }
+
+    public void setTufee(Double tufee) {
+        this.tufee = tufee;
+    }
+
+    public int getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(int paymentType) {
+        this.paymentType = paymentType;
+    }
     
 
     public Usuario getAccess_user() {
@@ -47,4 +84,8 @@ public class Empregado {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
+    
+    abstract public Double getFee();
+    abstract public Double getPayment();
+    abstract public int getType();
 }
