@@ -25,12 +25,22 @@ public class SelectUser extends JFrame {
      */
     List<Empregado> empregados;
     ISelectUser origin;
+    Action a;
     public SelectUser(ISelectUser origin) {
         this(null, origin);
     }
 
     public SelectUser(Integer filter, ISelectUser origin) {
+        this(filter, origin, null);
+    }
+    
+    public SelectUser(ISelectUser origin, Action a) {
+        this(null, origin, a);
+    }
+    
+    public SelectUser(Integer filter, ISelectUser origin, Action a) {
         initComponents();
+        this.a = a;
         this.origin = origin;
         empregados = EmployeeDAO.getEmployees(filter);
         Vector<String> columnNames = new Vector<>();
@@ -100,7 +110,7 @@ public class SelectUser extends JFrame {
         if (row == -1)
             return;
         if (evt.getClickCount() == 2) {
-            origin.callback(empregados.get(row));
+            origin.callback(empregados.get(row), a);
             dispose();
         }
     }//GEN-LAST:event_jTable1MousePressed

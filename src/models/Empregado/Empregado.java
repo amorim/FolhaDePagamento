@@ -1,14 +1,12 @@
 package models.Empregado;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import models.Endereco;
 import models.Usuario;
 
 
 public abstract class Empregado {
     
-    private int id;
+    private Integer id = null;
     private String name;
     private Endereco endereco;
     private Usuario access_user;
@@ -16,7 +14,7 @@ public abstract class Empregado {
     private Integer tuid = null;
     private Double tufee = null;
     
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

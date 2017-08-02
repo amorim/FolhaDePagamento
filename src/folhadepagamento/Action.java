@@ -5,12 +5,10 @@
  */
 package folhadepagamento;
 
-import models.Empregado.Empregado;
-
 /**
  *
  * @author lucas
  */
-public interface ISelectUser {
-    public void callback(Empregado e, Action a);
+public enum Action {
+    DELETE, REGISTER_ACCESS
 }

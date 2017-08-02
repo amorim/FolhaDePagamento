@@ -5,7 +5,6 @@
  */
 package folhadepagamento;
 
-import db.DB;
 import db.EmployeeDAO;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -23,7 +22,6 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
-        DB.preparade();
         initComponents();
     }
 

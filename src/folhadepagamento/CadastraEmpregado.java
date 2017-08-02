@@ -9,8 +9,9 @@ import enums.UserRole;
 import models.Empregado.Horista;
 import models.Endereco;
 import models.Usuario;
-import db.DB;
 import db.EmployeeDAO;
+import db.SnapshotDAO;
+import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
 import models.Empregado.Assalariado;
 import models.Empregado.Comissionado;
@@ -26,7 +27,7 @@ public class CadastraEmpregado extends javax.swing.JFrame implements ISelectUser
      * Creates new form CadastraEmpregado
      */
     private boolean isUpdating = false;
-    
+    private Empregado emp;
     public CadastraEmpregado() {
         this(false);
     }
@@ -43,19 +44,20 @@ public class CadastraEmpregado extends javax.swing.JFrame implements ISelectUser
    
     
     @Override
-    public void callback(Empregado e) {
+    public void callback(Empregado e, Action a) {
         setVisible(true);
         loadData(e);
+        this.emp = e;
     }
     
     private void loadData(Empregado e) {
         txtNome.setText(e.getName());
         comboTipo.setSelectedIndex(e.getType());
         comboTipoActionPerformed(null);
-        if (e.getFee() != null) {
+        if (e.getTufee() != 0.0) {
             checkSindicato.setSelected(true);
             txtTUID.setText(String.valueOf(e.getTuid()));
-            txtTUfee.setText(String.valueOf(e.getFee()));
+            txtTUfee.setText(String.valueOf(e.getTufee()));
         }
         txtUsu.setText(e.getAccess_user().getUsername());
         txtPass.setText(e.getAccess_user().getPassword());
@@ -291,8 +293,15 @@ public class CadastraEmpregado extends javax.swing.JFrame implements ISelectUser
             emp.setTuid(Integer.parseInt(txtTUID.getText()));
             emp.setTufee(Double.parseDouble(txtTUfee.getText()));
         }
-        EmployeeDAO.insertEmployee(emp);
-        JOptionPane.showMessageDialog(null, "Cadastrado com sucesso", "OK", JOptionPane.INFORMATION_MESSAGE);
+        String message = "created", message2 = "inserting";
+        if (isUpdating) {
+            emp.setId(this.emp.getId());
+            message = "updated";
+            message2 = "updating";
+        }        
+        SnapshotDAO.createSnapshot(("Before @string user " + emp.getName() + " - " + LocalDateTime.now().toString()).replace("@string", message2));
+        EmployeeDAO.insertOrUpdateEmployee(emp);
+        JOptionPane.showMessageDialog(null, "User " + emp.getName() + " was " + message, "OK", JOptionPane.INFORMATION_MESSAGE);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

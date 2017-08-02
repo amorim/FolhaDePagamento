@@ -9,22 +9,21 @@ import db.EmployeeDAO;
 import db.SnapshotDAO;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
-import models.Empregado.Comissionado;
 import models.Empregado.Empregado;
 
 /**
  *
  * @author lucas
  */
-public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
+public class LancaTaxa extends javax.swing.JFrame implements ISelectUser {
 
     /**
-     * Creates new form LancaVenda
+     * Creates new form LancaTaxa
      */
-    Comissionado c;
-    public LancaVenda() {
+    Empregado e;
+    public LancaTaxa() {
         initComponents();
-        new SelectUser(2, this).setVisible(true);
+        new SelectUser(this).setVisible(true);
     }
 
     /**
@@ -37,22 +36,22 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Lança Venda");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, -1, -1));
-
-        jLabel2.setText("Valor: ");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, -1, 20));
+        jLabel1.setText("Lança Taxa");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 130, -1));
 
         jTextField1.setText(" ");
         getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 170, -1));
+
+        jLabel2.setText("Valor: ");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, -1, 20));
 
         jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -67,9 +66,9 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SnapshotDAO.createSnapshot("Before registering sale for user " + c.getName() + " - " + LocalDateTime.now().toString());
-        EmployeeDAO.lancaVenda(c, Double.parseDouble(jTextField1.getText()));
-        JOptionPane.showMessageDialog(null, "Sale registered.");
+        SnapshotDAO.createSnapshot("Before registering fee for user " + e.getName() + " - " + LocalDateTime.now().toString());
+        EmployeeDAO.lancaTaxa(e, Double.parseDouble(jTextField1.getText()));
+        JOptionPane.showMessageDialog(null, "Fee registered.");
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -90,20 +89,20 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancaTaxa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancaTaxa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancaTaxa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LancaTaxa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LancaVenda().setVisible(true);
+                new LancaTaxa().setVisible(true);
             }
         });
     }
@@ -117,7 +116,7 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
 
     @Override
     public void callback(Empregado e, Action a) {
-         c = (Comissionado)e;
-         setVisible(true);   
+        this.e = e;
+        setVisible(true);
     }
 }

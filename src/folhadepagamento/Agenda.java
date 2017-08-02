@@ -5,26 +5,21 @@
  */
 package folhadepagamento;
 
-import db.EmployeeDAO;
-import db.SnapshotDAO;
-import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
-import models.Empregado.Comissionado;
 import models.Empregado.Empregado;
 
 /**
  *
  * @author lucas
  */
-public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
-
+public class Agenda extends javax.swing.JFrame implements ISelectUser {
+    Empregado e;
     /**
-     * Creates new form LancaVenda
+     * Creates new form Agenda
      */
-    Comissionado c;
-    public LancaVenda() {
+    public Agenda() {
         initComponents();
-        new SelectUser(2, this).setVisible(true);
+        new SelectUser(1, this).setVisible(true);
     }
 
     /**
@@ -38,6 +33,10 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
@@ -45,14 +44,24 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Lança Venda");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, -1, -1));
+        jLabel1.setText("Agenda");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 80, -1));
 
-        jLabel2.setText("Valor: ");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, -1, 20));
+        jLabel2.setText("Tipo da Agenda:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, -1, 20));
 
-        jTextField1.setText(" ");
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 170, -1));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Mensal", "Bi-semanal" }));
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 150, -1));
+
+        jLabel3.setText("Dia da semana:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, -1, 20));
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Segunda", "Terça", "Quarta", "Quinta", "Sexta" }));
+        getContentPane().add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 150, -1));
+
+        jLabel4.setText("Dia:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, -1, 20));
+        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 150, -1));
 
         jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -60,16 +69,14 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 170, -1, -1));
 
-        setSize(new java.awt.Dimension(416, 180));
+        setSize(new java.awt.Dimension(416, 249));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SnapshotDAO.createSnapshot("Before registering sale for user " + c.getName() + " - " + LocalDateTime.now().toString());
-        EmployeeDAO.lancaVenda(c, Double.parseDouble(jTextField1.getText()));
-        JOptionPane.showMessageDialog(null, "Sale registered.");
+        JOptionPane.showMessageDialog(null, "OK");
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -90,34 +97,38 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Agenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Agenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Agenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LancaVenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Agenda.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LancaVenda().setVisible(true);
+                new Agenda().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void callback(Empregado e, Action a) {
-         c = (Comissionado)e;
-         setVisible(true);   
+        this.e = e;
+        setVisible(true);
     }
 }
