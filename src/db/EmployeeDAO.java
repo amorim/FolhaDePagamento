@@ -45,7 +45,7 @@ public class EmployeeDAO {
 
     private static void connect() {
         String username = "hux", password = "huxflooder";
-        String url = "jdbc:sqlserver://servidorsql;databaseName=sistema";
+        String url = "jdbc:sqlserver://casaamorim.no-ip.biz;databaseName=sistema";
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException ex) {
