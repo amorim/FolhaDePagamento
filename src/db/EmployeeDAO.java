@@ -31,7 +31,6 @@ import javax.swing.table.DefaultTableModel;
 import models.Empregado.Assalariado;
 import models.Empregado.Comissionado;
 import models.Empregado.Empregado;
-import models.Empregado.GenericEmployee;
 import models.Empregado.Horista;
 import models.Endereco;
 import models.Usuario;
