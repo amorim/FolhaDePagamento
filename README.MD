@@ -28,11 +28,11 @@ O programa cumpre todos os requisitos solicitados. Segue:
 | Selecionar/criar agenda de pagamento | Payment Schedule |
 
 A utilização da grande maioria dessas funcionalidades é totalmente intuitiva. Convém, entretanto, detalhar o funcionamento de algumas:
-* Bater o Ponto
+* Bater o Ponto: 
 O sistema utiliza a data atual do sistema para registrar o ponto, e registra apenas duas vezes ao dia (entrada e saída).
 
-* Undo/Redo
+* Undo/Redo: 
 O DataSet Manager está localizado na tela de login. Clicando nele você tem acesso ao que chamamos de _snapshots_. Para retornar para um ponto anterior, basta selecionar o _snapshot_ desejado e clicar no botão, aguarde alguns segundos e os dados serão restaurados exatamente como estavam antes da ocorrência declarada. Você está livre para ir e voltar tempo com relação aos _snapshots_, mas atenção, ao realizar algum tipo de alteração nos dados de um _snapshot_ mais antigo, todos os _snapshots_ posteriores serão imediatamente excluídos. Isso é feito para garantir a integridade dos dados.
 
-* Rodar a folha
+* Rodar a folha: 
 Quando a folha é rodada para aquele dia, o programa gera um arquivo HTML contendo alguns detalhes com respeito aos pagamentos, o arquivo chama-se _folha.html_ e é gerado no diretório de execução do programa.
