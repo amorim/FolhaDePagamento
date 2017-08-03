@@ -5,6 +5,7 @@
  */
 package folhadepagamento;
 
+import db.EmployeeDAO;
 import javax.swing.JOptionPane;
 import models.Empregado.Empregado;
 
@@ -13,13 +14,16 @@ import models.Empregado.Empregado;
  * @author lucas
  */
 public class Agenda extends javax.swing.JFrame implements ISelectUser {
+
     Empregado e;
+
     /**
      * Creates new form Agenda
      */
     public Agenda() {
         initComponents();
-        new SelectUser(1, this).setVisible(true);
+        txtDia.setEnabled(false);
+        new SelectUser(this).setVisible(true);
     }
 
     /**
@@ -33,14 +37,16 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboTipo = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        comboDia = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtDia = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -50,18 +56,23 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
         jLabel2.setText("Tipo da Agenda:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, -1, 20));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Mensal", "Bi-semanal" }));
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 150, -1));
+        comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Mensal", "Bi-semanal" }));
+        comboTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboTipoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(comboTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 150, -1));
 
         jLabel3.setText("Dia da semana:");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, -1, 20));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Segunda", "Terça", "Quarta", "Quinta", "Sexta" }));
-        getContentPane().add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 150, -1));
+        comboDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Segunda", "Terça", "Quarta", "Quinta", "Sexta" }));
+        getContentPane().add(comboDia, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 150, -1));
 
         jLabel4.setText("Dia:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, -1, 20));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 150, -1));
+        getContentPane().add(txtDia, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 150, -1));
 
         jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -69,16 +80,45 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 170, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, -1, -1));
 
-        setSize(new java.awt.Dimension(416, 249));
+        jLabel5.setText("Insira -1 se quiser o último dia do mês");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 190, 20));
+
+        setSize(new java.awt.Dimension(416, 272));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JOptionPane.showMessageDialog(null, "OK");
+        if (comboTipo.getSelectedIndex() == 1 && (e.getType() == 0 || e.getType() == 2)) {
+            JOptionPane.showMessageDialog(null, "Invalid Selection", "Invalid", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int val;
+        if (comboTipo.getSelectedIndex() == 1) {
+            int dia = Integer.parseInt(txtDia.getText());
+            if (dia > 30 || dia < 1) {
+                JOptionPane.showMessageDialog(null, "Invalid Selection", "Invalid", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            val = dia;
+        } else {
+            val = comboDia.getSelectedIndex() + 1;
+        }
+        EmployeeDAO.updateEmployeeScheduleChoice(e, comboTipo.getSelectedIndex(), val);
+        JOptionPane.showMessageDialog(null, "Employee schedule changed.");
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void comboTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTipoActionPerformed
+        if (comboTipo.getSelectedIndex() == 1) {
+            comboDia.setEnabled(false);
+            txtDia.setEnabled(true);
+        } else {
+            comboDia.setEnabled(true);
+            txtDia.setEnabled(false);
+        }
+    }//GEN-LAST:event_comboTipoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -116,14 +156,15 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> comboDia;
+    private javax.swing.JComboBox<String> comboTipo;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField txtDia;
     // End of variables declaration//GEN-END:variables
 
     @Override
