@@ -22,7 +22,9 @@ import java.time.Month;
 import java.time.ZoneId;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.WEEKS;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -237,27 +239,29 @@ public class EmployeeDAO {
         connect();
         String html = "";
         html += "<h1>Folha de Pagamento</h1><br><table border='1'><tr><th>Nome</th><th>Salario Bruto</th><th>Descontos</th><th>Salario Liquido</th></tr>";
-        String strhoristas = "select * from employee e inner join agenda a on e.id = a.employeeId where e.type = 0";
+        String strhoristas = "select *, datediff(week, a.lastPaid, getdate()) as diff from employee e inner join agenda a on e.id = a.employeeId where e.type = 0";
         try {
             ResultSet rshoristas = conn.createStatement().executeQuery(strhoristas);
             while (rshoristas.next()) {
                 int type = rshoristas.getInt(8);
                 if (type == 0 || type == 2) {
                     LocalDate lastpaid;
+                    long difference;
                     try {
                         lastpaid = rshoristas.getDate("lastPaid").toLocalDate();
+                        difference = rshoristas.getInt("diff");
                     } catch (Exception e) {
                         lastpaid = LocalDate.of(2000, Month.JANUARY, 1);
+                        difference = 1000;
                     }
                     LocalDate now = LocalDate.now();
-                    long difference = DAYS.between(lastpaid, now);
                     long expected;
                     if (rshoristas.getInt(8) == 0) {
-                        expected = 7;
+                        expected = 1;
                     } else {
-                        expected = 15;
+                        expected = 2;
                     }
-                    if (expected <= difference) {
+                    if (expected <= difference && rshoristas.getInt("payDay") == now.getDayOfWeek().getValue()) {
                         html += "<tr>";
                         html += "<td>" + rshoristas.getString("employeeName") + "</td>";
                         String puxaHorasTrabalhadas = "select * from access_card where employeeId = ? and access_time > ? and access_time <= ?";
@@ -308,24 +312,26 @@ public class EmployeeDAO {
                     }
                 }
             }
-            String sqlcom = "select * from employee e inner join agenda a on e.id = a.employeeId where e.type = 2";
+            String sqlcom = "select *, datediff(week, a.lastPaid, getdate()) as diff from employee e inner join agenda a on e.id = a.employeeId where e.type = 2";
             ResultSet comissionados = conn.createStatement().executeQuery(sqlcom);
             while (comissionados.next()) {
                 LocalDate lastpaid;
+                long difference;
                 try {
                     lastpaid = comissionados.getDate("lastPaid").toLocalDate();
+                    difference = comissionados.getInt("diff");
                 } catch (Exception e) {
                     lastpaid = LocalDate.of(2000, Month.JANUARY, 1);
+                    difference = 1000;
                 }
                 LocalDate now = LocalDate.now();
-                long difference = DAYS.between(lastpaid, now);
                 long expected;
                 if (comissionados.getInt(8) == 0) {
-                    expected = 7;
+                    expected = 1;
                 } else {
-                    expected = 15;
+                    expected = 2;
                 }
-                if (expected <= difference) {
+                if (expected <= difference && comissionados.getInt("payDay") == now.getDayOfWeek().getValue()) {
                     html += "<tr>";
                     html += "<td>" + comissionados.getString("employeeName") + "</td>";
                     String sqlrapid = "select * from tradeUnion where employeeId = " + comissionados.getInt("id");
@@ -349,7 +355,7 @@ public class EmployeeDAO {
                     PreparedStatement pstmt = conn.prepareStatement(sqlrapid);
                     pstmt.setInt(1, comissionados.getInt("id"));
                     pstmt.setDate(2, java.sql.Date.valueOf(lastpaid));
-                    ResultSet vendas = conn.createStatement().executeQuery(sqlrapid);
+                    ResultSet vendas = pstmt.executeQuery();
                     double totcomissao = 0;
                     while (vendas.next()) {
                         totcomissao += (comissao / 100) * vendas.getDouble("saleValue");
@@ -362,7 +368,7 @@ public class EmployeeDAO {
                     updateLastPaid(comissionados.getInt("id"));
                 }
             }
-            String sqlass = "select * from employee e inner join agenda a on e.id = a.employeeId where e.type = 1";
+            String sqlass = "select *, datediff(week, a.lastPaid, getdate()) as diff from employee e inner join agenda a on e.id = a.employeeId where e.type = 1";
             ResultSet ass = conn.createStatement().executeQuery(sqlass);
             while (ass.next()) {
                 String sqlrapid = "select * from tradeUnion where employeeId = " + ass.getInt("id");
@@ -383,20 +389,22 @@ public class EmployeeDAO {
                 }
                 if (ass.getInt(8) == 0 || ass.getInt(8) == 2) {
                     LocalDate lastpaid;
+                    long difference;
                     try {
                         lastpaid = ass.getDate("lastPaid").toLocalDate();
+                        difference = ass.getInt("diff");
                     } catch (Exception e) {
                         lastpaid = LocalDate.of(2000, Month.JANUARY, 1);
+                        difference = 1000;
                     }
                     LocalDate now = LocalDate.now();
-                    long difference = DAYS.between(lastpaid, now);
                     long expected;
                     if (ass.getInt(8) == 0) {
-                        expected = 7;
+                        expected = 1;
                     } else {
-                        expected = 15;
+                        expected = 2;
                     }
-                    if (expected <= difference) {
+                    if (expected <= difference && ass.getInt("payDay") == now.getDayOfWeek().getValue()) {
                         html += "<tr>";
                         html += "<td>" + ass.getString("employeeName") + "</td>";
                         if (ass.getInt(8) == 0) {
@@ -411,11 +419,10 @@ public class EmployeeDAO {
                         html += "</tr>";
                         updateLastPaid(ass.getInt("id"));
                     }
-                }
-                else {
+                } else {
                     LocalDate now = LocalDate.now();
                     int day = ass.getInt("payDay");
-                    if (day == now.getDayOfMonth() || (day == -1 && now.getDayOfMonth() == 30)) {
+                    if (day == now.getDayOfMonth() || (day == -1 && now.getDayOfMonth() == Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH))) {
                         html += "<tr>";
                         html += "<td>" + ass.getString("employeeName") + "</td>";
                         double bruto = salario;
@@ -440,15 +447,31 @@ public class EmployeeDAO {
             writer.close();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally {
+        } finally {
             disconnect();
         }
 
     }
-    
+
+    public static void updateEmployeeScheduleChoice(Empregado e, int tipo, int dia) {
+        connect();
+        String strsql = "update agenda set type = ?, payDay = ? where employeeId = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(strsql);
+            pstmt.setInt(1, tipo);
+            pstmt.setInt(2, dia);
+            pstmt.setInt(3, e.getId());
+            pstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            disconnect();
+        }
+    }
+
     private static void updateLastPaid(int idEmp) throws SQLException {
         String strsql = "update agenda set lastPaid = getdate() where employeeId = " + idEmp;
         conn.createStatement().execute(strsql);
     }
+
 }
