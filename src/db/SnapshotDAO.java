@@ -24,7 +24,7 @@ public class SnapshotDAO {
     private static Connection conn;
     private static void connect() {
         String username = "hux", password = "huxflooder";
-        String url = "jdbc:sqlserver://servidorsql;databaseName=snapshot_control";
+        String url = "jdbc:sqlserver://casaamorim.no-ip.biz;databaseName=snapshot_control";
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException ex) {
@@ -58,19 +58,20 @@ public class SnapshotDAO {
                 snap.setOcurrence(rs.getString("ocurrence"));
                 snapshots.add(snap);
             }
-            disconnect();
             return snapshots;
             
         } catch (SQLException ex) {
-            disconnect();
             Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            disconnect();
         }
        return null; 
     }
     
     private static void rollback() {
         connect();
-        String strDisc = "alter database sistema set single_user with rollback immediate";
+        String strDisc = "alter database sistema set multi_user with rollback immediate";
         try {
             conn.createStatement().execute(strDisc);
         } catch (SQLException ex) {

@@ -44,6 +44,7 @@ public class Main extends javax.swing.JFrame implements ISelectUser {
         jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnNewEmployee.setText("Register Employee");
