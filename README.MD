@@ -14,8 +14,9 @@ O programa fará todas as consultas de um servidor remoto. Esse procedimento pod
 
 ### 3. O Programa
 O programa cumpre todos os requisitos solicitados. Segue:
+
 | Requisito | No programa |
-| ------------- | ------------- |
+| --- | --- |
 | Adição de empregado | Insert Employee |
 | Remoção de empregado | Remove Employee |
 | Bater o Ponto | Register Access |
