@@ -49,7 +49,7 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
         jLabel1.setText("Register Sale");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, -1, -1));
 
-        jLabel2.setText("Valor: ");
+        jLabel2.setText("Value:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, -1, 20));
 
         jTextField1.setText(" ");

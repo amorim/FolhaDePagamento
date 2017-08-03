@@ -51,7 +51,7 @@ public class LancaTaxa extends javax.swing.JFrame implements ISelectUser {
         jTextField1.setText(" ");
         getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 170, -1));
 
-        jLabel2.setText("Valor: ");
+        jLabel2.setText("Value:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, -1, 20));
 
         jButton1.setText("OK");
