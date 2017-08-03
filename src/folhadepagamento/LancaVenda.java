@@ -46,7 +46,7 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Lança Venda");
+        jLabel1.setText("Register Sale");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, -1, -1));
 
         jLabel2.setText("Valor: ");

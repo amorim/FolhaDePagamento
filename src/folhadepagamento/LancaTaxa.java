@@ -45,7 +45,7 @@ public class LancaTaxa extends javax.swing.JFrame implements ISelectUser {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Lança Taxa");
+        jLabel1.setText("Register fee");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 130, -1));
 
         jTextField1.setText(" ");

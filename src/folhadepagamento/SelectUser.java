@@ -44,8 +44,8 @@ public class SelectUser extends JFrame {
         this.origin = origin;
         empregados = EmployeeDAO.getEmployees(filter);
         Vector<String> columnNames = new Vector<>();
-        columnNames.add("Identificação");
-        columnNames.add("Nome");
+        columnNames.add("Identification");
+        columnNames.add("Name");
         Empregado[] array = empregados.toArray(new Empregado[0]);
         Vector<Vector<Object>> data = new Vector<Vector<Object>>();
         empregados.stream().forEach(e -> {

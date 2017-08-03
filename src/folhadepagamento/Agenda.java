@@ -50,10 +50,10 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Agenda");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 80, -1));
+        jLabel1.setText("Schedule");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 110, -1));
 
-        jLabel2.setText("Tipo da Agenda:");
+        jLabel2.setText("Schedule Type:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, -1, 20));
 
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Mensal", "Bi-semanal" }));
@@ -64,13 +64,13 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
         });
         getContentPane().add(comboTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 150, -1));
 
-        jLabel3.setText("Dia da semana:");
+        jLabel3.setText("Day of week:");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, -1, 20));
 
-        comboDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Segunda", "Terça", "Quarta", "Quinta", "Sexta" }));
+        comboDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" }));
         getContentPane().add(comboDia, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 150, -1));
 
-        jLabel4.setText("Dia:");
+        jLabel4.setText("Day:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, -1, 20));
         getContentPane().add(txtDia, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 150, -1));
 
@@ -82,8 +82,8 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, -1, -1));
 
-        jLabel5.setText("Insira -1 se quiser o último dia do mês");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 190, 20));
+        jLabel5.setText("Type -1 if you want the last day of month");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 200, 20));
 
         setSize(new java.awt.Dimension(416, 272));
         setLocationRelativeTo(null);
