@@ -1,5 +1,5 @@
 # Folha de Pagamento
----
+
 #### 1. Instruções para executar o programa pela primeira vez
 Existem duas formas de executar o projeto. Você pode abri-lo como um projeto do netbeans, apenas fazendo o clone deste repositório, e em seguida executar. Você também pode utilizar o jar compilado encontrado no diretório dist. É importante notar que o diretório _lib_ é de extrema importância para o funcionamento do programa, então mantenha a estrutura da pasta dist como foi distribuída.
 O projeto depende de apenas uma biblioteca, já disponibilizamos o jar dela em _dist/lib/sqljdbc42.jar_ para maior comodidade.
