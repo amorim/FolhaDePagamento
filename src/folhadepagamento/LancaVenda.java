@@ -68,8 +68,16 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        double venda;
+        try {
+            venda = Double.parseDouble(jTextField1.getText());
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Inserted value isn't a number. Verify.", "Verify input", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         SnapshotDAO.createSnapshot("Before registering sale for user " + c.getName() + " - " + LocalDateTime.now().toString());
-        EmployeeDAO.lancaVenda(c, Double.parseDouble(jTextField1.getText()));
+        EmployeeDAO.lancaVenda(c, venda);
         JOptionPane.showMessageDialog(null, "Sale registered.");
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

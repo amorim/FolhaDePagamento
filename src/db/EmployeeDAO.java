@@ -69,7 +69,6 @@ public class EmployeeDAO {
     }
 
     public static void insertOrUpdateEmployee(Empregado e) {
-
         String strsql = "{call usp_createUpdateEmployee(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         connect();
         CallableStatement cstmt;

@@ -90,7 +90,7 @@ public class Login extends javax.swing.JFrame {
             new Main().setVisible(true);
             dispose();
         }
-        else
+        else    
             JOptionPane.showMessageDialog(null, "Erro", "Usuário ou senha incorretos", JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_jButton1ActionPerformed
 

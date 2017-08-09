@@ -47,14 +47,15 @@ public class SelectUser extends JFrame {
         columnNames.add("Identification");
         columnNames.add("Name");
         Empregado[] array = empregados.toArray(new Empregado[0]);
-        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        Vector<Vector<Object>> data = new Vector<>();
         empregados.stream().forEach(e -> {
-            Vector<Object> vector = new Vector<Object>();
+            Vector<Object> vector = new Vector<>();
             vector.add(e.getId());
             vector.add(e.getName());
             data.add(vector);
         });
         jTable1.setModel(new DefaultTableModel(data, columnNames) {
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
