@@ -5,12 +5,16 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.EmployeeDAO;
 import db.SnapshotDAO;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import models.Empregado.Empregado;
+import util.Util;
 
 /**
  *
@@ -140,9 +144,13 @@ public class Main extends javax.swing.JFrame implements ISelectUser {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        SnapshotDAO.createSnapshot("Before releasing payroll on " + LocalDateTime.now().toString());
-        EmployeeDAO.rodaFolha();
-        JOptionPane.showMessageDialog(null, "Payroll generated on html");
+        try {
+            SnapshotDAO.createSnapshot("Before releasing payroll on " + LocalDateTime.now().toString());
+            EmployeeDAO.rodaFolha();
+            JOptionPane.showMessageDialog(null, "Payroll generated on html");
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -189,14 +197,25 @@ public class Main extends javax.swing.JFrame implements ISelectUser {
     @Override
     public void callback(Empregado e, Action a) {
         if (a == Action.REGISTER_ACCESS) {
-            SnapshotDAO.createSnapshot("Before registering access for user " + e.getName());
-            EmployeeDAO.batePonto(e);
-            JOptionPane.showMessageDialog(null, "Access registered");
+
+            try {
+                SnapshotDAO.createSnapshot("Before registering access for user " + e.getName());
+                EmployeeDAO.batePonto(e);
+                JOptionPane.showMessageDialog(null, "Access registered");
+            } catch (DatabaseOperationFailedException ex) {
+                Util.displayDatabaseError(ex.getMessage());
+            }
+
         } else {
-            SnapshotDAO.createSnapshot("Before removing user " + e.getName() + " - " + LocalDateTime.now().toString());
-            EmployeeDAO.deleteEmployee(e);
-            JOptionPane.showMessageDialog(null, "User removed");
+
+            try {
+                SnapshotDAO.createSnapshot("Before removing user " + e.getName() + " - " + LocalDateTime.now().toString());
+                EmployeeDAO.deleteEmployee(e);
+                JOptionPane.showMessageDialog(null, "User removed");
+            } catch (DatabaseOperationFailedException ex) {
+                Util.displayDatabaseError(ex.getMessage());
+            }
         }
     }
-    
+
 }

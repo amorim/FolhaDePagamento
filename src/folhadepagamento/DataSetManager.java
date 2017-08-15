@@ -5,11 +5,15 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.SnapshotDAO;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import models.Snapshot;
+import util.Util;
 
 /**
  *
@@ -22,7 +26,14 @@ public class DataSetManager extends javax.swing.JFrame {
      */
     public DataSetManager() {
         initComponents();
-        ArrayList<Snapshot> list = SnapshotDAO.getSnapshots();
+        ArrayList<Snapshot> list;
+        try {
+            list = SnapshotDAO.getSnapshots();
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+            dispose();
+            return;
+        }
         if (list.isEmpty())
             jButton1.setEnabled(false);
         Snapshot[] arr = list.toArray(new Snapshot[0]);
@@ -82,8 +93,13 @@ public class DataSetManager extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Are you sure you want to recover to the selected snapshot?", "Sure?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             Snapshot snap = (Snapshot)jComboBox1.getSelectedItem();
-            SnapshotDAO.recoverFromSnapshot(snap);
-            JOptionPane.showMessageDialog(null, "The dataset was recovered from the snapshot you selected.", "OK", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                SnapshotDAO.recoverFromSnapshot(snap);
+                JOptionPane.showMessageDialog(null, "The dataset was recovered from the snapshot you selected.", "OK", JOptionPane.INFORMATION_MESSAGE);
+            } catch (DatabaseOperationFailedException ex) {
+                Util.displayDatabaseError(ex.getMessage());
+            }
+            
             dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed

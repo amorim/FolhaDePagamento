@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Empregado.Assalariado;
 import models.Empregado.Comissionado;
@@ -51,11 +52,13 @@ public class EmployeeDAO {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "SQL Server driver not found. Make sure you have the SQL jdbc driver in the lib folder.", "Driver not found", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             conn = DriverManager.getConnection(url, username, password);
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Connection to the database has failed. Verify your connection to the internet. If you have internet access, please contact Lucas.", "Connection failed", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -68,7 +71,7 @@ public class EmployeeDAO {
         }
     }
 
-    public static void insertOrUpdateEmployee(Empregado e) {
+    public static void insertOrUpdateEmployee(Empregado e) throws DatabaseOperationFailedException {
         String strsql = "{call usp_createUpdateEmployee(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         connect();
         CallableStatement cstmt;
@@ -97,12 +100,13 @@ public class EmployeeDAO {
             cstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
     }
 
-    public static void deleteEmployee(Empregado e) {
+    public static void deleteEmployee(Empregado e) throws DatabaseOperationFailedException {
         connect();
         String strsql = "delete from employee where id = ?";
         try {
@@ -111,12 +115,13 @@ public class EmployeeDAO {
             pstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
     }
 
-    public static List<Empregado> getEmployees(Integer filter) {
+    public static List<Empregado> getEmployees(Integer filter) throws DatabaseOperationFailedException {
         connect();
         String strsql = "select e.id, e.employeeName, e.type, e.username, e.pass, t.id as tuid, t.fee as tufee, a.street, a.number, a.complement, a.city, a.uf, a.cep, p.paymentType, p.paymentValue, p.fee as comission"
                 + " from employee e left join tradeUnion t on e.id = t.employeeId inner join employeeAddress a on e.id = a.employeeId inner join payment p on p.employeeId = e.id@filter";
@@ -165,13 +170,13 @@ public class EmployeeDAO {
             return list;
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
-        return null;
     }
 
-    public static boolean login(String user, String password) {
+    public static boolean login(String user, String password) throws DatabaseOperationFailedException {
         connect();
         String strsql = "select count(*) from employee where username like ? and pass like ?";
         try {
@@ -183,13 +188,13 @@ public class EmployeeDAO {
             return rs.getInt(1) == 1;
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
-        return false;
     }
 
-    public static void batePonto(Empregado e) {
+    public static void batePonto(Empregado e) throws DatabaseOperationFailedException {
         connect();
         String strsql = "{call usp_batePonto(?)}";
         CallableStatement cstmt;
@@ -199,12 +204,13 @@ public class EmployeeDAO {
             cstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
     }
 
-    public static void lancaVenda(Comissionado c, double valorVenda) {
+    public static void lancaVenda(Comissionado c, double valorVenda) throws DatabaseOperationFailedException {
         connect();
         String strsql = "insert selling values (getdate(), ?, ?)";
         try {
@@ -214,12 +220,13 @@ public class EmployeeDAO {
             psmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
     }
 
-    public static void lancaTaxa(Empregado e, double valorTaxa) {
+    public static void lancaTaxa(Empregado e, double valorTaxa) throws DatabaseOperationFailedException {
         connect();
         String strsql = "insert serviceFees values (getdate(), ?, ?)";
         try {
@@ -229,12 +236,13 @@ public class EmployeeDAO {
             psmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
     }
 
-    public static void rodaFolha() {
+    public static void rodaFolha() throws DatabaseOperationFailedException {
         connect();
         String html = "";
         html += "<h1>Folha de Pagamento</h1><br><table border='1'><tr><th>Nome</th><th>Salario Bruto</th><th>Descontos</th><th>Salario Liquido</th></tr>";
@@ -446,13 +454,14 @@ public class EmployeeDAO {
             writer.close();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }
 
     }
 
-    public static void updateEmployeeScheduleChoice(Empregado e, int tipo, int dia) {
+    public static void updateEmployeeScheduleChoice(Empregado e, int tipo, int dia) throws DatabaseOperationFailedException {
         connect();
         String strsql = "update agenda set type = ?, payDay = ? where employeeId = ?";
         try {
@@ -463,6 +472,7 @@ public class EmployeeDAO {
             pstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         } finally {
             disconnect();
         }

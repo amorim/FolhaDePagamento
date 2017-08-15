@@ -5,12 +5,16 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.EmployeeDAO;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import models.Empregado.Empregado;
 import models.Usuario;
+import util.Util;
 
 /**
  *
@@ -86,12 +90,16 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUsuActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (EmployeeDAO.login(txtUsu.getText(), String.valueOf(txtPassword.getPassword()))) {
-            new Main().setVisible(true);
-            dispose();
+        try {
+            if (EmployeeDAO.login(txtUsu.getText(), String.valueOf(txtPassword.getPassword()))) {
+                new Main().setVisible(true);
+                dispose();
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Erro", "Usuário ou senha incorretos", JOptionPane.ERROR_MESSAGE);
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
         }
-        else    
-            JOptionPane.showMessageDialog(null, "Erro", "Usuário ou senha incorretos", JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

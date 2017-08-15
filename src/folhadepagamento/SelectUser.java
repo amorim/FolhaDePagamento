@@ -5,12 +5,16 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.EmployeeDAO;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import models.Empregado.Empregado;
+import util.Util;
 
 /**
  *
@@ -42,7 +46,12 @@ public class SelectUser extends JFrame {
         initComponents();
         this.a = a;
         this.origin = origin;
-        empregados = EmployeeDAO.getEmployees(filter);
+        try {
+            empregados = EmployeeDAO.getEmployees(filter);
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+            dispose();
+        }
         Vector<String> columnNames = new Vector<>();
         columnNames.add("Identification");
         columnNames.add("Name");

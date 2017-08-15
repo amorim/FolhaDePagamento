@@ -5,6 +5,7 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import enums.UserRole;
 import models.Empregado.Horista;
 import models.Endereco;
@@ -12,10 +13,13 @@ import models.Usuario;
 import db.EmployeeDAO;
 import db.SnapshotDAO;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Empregado.Assalariado;
 import models.Empregado.Comissionado;
 import models.Empregado.Empregado;
+import util.Util;
 
 /**
  *
@@ -299,9 +303,13 @@ public class CadastraEmpregado extends javax.swing.JFrame implements ISelectUser
             message = "updated";
             message2 = "updating";
         }        
-        SnapshotDAO.createSnapshot(("Before @string user " + emp.getName() + " - " + LocalDateTime.now().toString()).replace("@string", message2));
-        EmployeeDAO.insertOrUpdateEmployee(emp);
-        JOptionPane.showMessageDialog(null, "User " + emp.getName() + " was " + message, "OK", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            SnapshotDAO.createSnapshot(("Before @string user " + emp.getName() + " - " + LocalDateTime.now().toString()).replace("@string", message2));
+            EmployeeDAO.insertOrUpdateEmployee(emp);
+            JOptionPane.showMessageDialog(null, "User " + emp.getName() + " was " + message, "OK", JOptionPane.INFORMATION_MESSAGE);
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+        }        
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

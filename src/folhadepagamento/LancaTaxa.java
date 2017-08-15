@@ -5,11 +5,15 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.EmployeeDAO;
 import db.SnapshotDAO;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Empregado.Empregado;
+import util.Util;
 
 /**
  *
@@ -75,9 +79,13 @@ public class LancaTaxa extends javax.swing.JFrame implements ISelectUser {
             JOptionPane.showMessageDialog(null, "Inserted value isn't a number. Verify.", "Verify input", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        SnapshotDAO.createSnapshot("Before registering fee for user " + e.getName() + " - " + LocalDateTime.now().toString());
-        EmployeeDAO.lancaTaxa(e, taxa);
-        JOptionPane.showMessageDialog(null, "Fee registered.");
+        try {
+            SnapshotDAO.createSnapshot("Before registering fee for user " + e.getName() + " - " + LocalDateTime.now().toString());
+            EmployeeDAO.lancaTaxa(e, taxa);
+            JOptionPane.showMessageDialog(null, "Fee registered.");
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+        }
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

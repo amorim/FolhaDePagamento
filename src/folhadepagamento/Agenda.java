@@ -5,9 +5,13 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.EmployeeDAO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Empregado.Empregado;
+import util.Util;
 
 /**
  *
@@ -105,8 +109,12 @@ public class Agenda extends javax.swing.JFrame implements ISelectUser {
         } else {
             val = comboDia.getSelectedIndex() + 1;
         }
-        EmployeeDAO.updateEmployeeScheduleChoice(e, comboTipo.getSelectedIndex(), val);
-        JOptionPane.showMessageDialog(null, "Employee schedule changed.");
+        try {
+            EmployeeDAO.updateEmployeeScheduleChoice(e, comboTipo.getSelectedIndex(), val);
+            JOptionPane.showMessageDialog(null, "Employee schedule changed.");
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+        }        
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

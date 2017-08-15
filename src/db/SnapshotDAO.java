@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import models.Snapshot;
 
 /**
@@ -28,12 +29,14 @@ public class SnapshotDAO {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "SQL Server driver not found. Make sure you have the SQL jdbc driver in the lib folder.", "Driver not found", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             conn = DriverManager.getConnection(url, username, password);
         } catch (SQLException ex) {
-            Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Connection to the database has failed. Verify your connection to the internet. If you have internet access, please contact Lucas.", "Connection failed", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -44,7 +47,7 @@ public class SnapshotDAO {
             Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public static ArrayList<Snapshot> getSnapshots() {
+    public static ArrayList<Snapshot> getSnapshots() throws DatabaseOperationFailedException {
         connect();
         String strSQL = "select * from db_snapshot";
         try {
@@ -62,20 +65,21 @@ public class SnapshotDAO {
             
         } catch (SQLException ex) {
             Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         }
         finally {
             disconnect();
-        }
-       return null; 
+        } 
     }
     
-    private static void rollback() {
+    private static void rollback() throws DatabaseOperationFailedException {
         connect();
         String strDisc = "alter database sistema set multi_user with rollback immediate";
         try {
             conn.createStatement().execute(strDisc);
         } catch (SQLException ex) {
             Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         }
         finally {
           disconnect();
@@ -83,7 +87,7 @@ public class SnapshotDAO {
        
     }
     
-    public static void createSnapshot(String snapDesc) {
+    public static void createSnapshot(String snapDesc) throws DatabaseOperationFailedException {
         rollback();
         connect();
         String insert = "insert db_snapshot values (?, ?, 0, 0)";
@@ -98,6 +102,7 @@ public class SnapshotDAO {
             pst.execute();
         } catch (SQLException ex) {
             Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         }
         finally {
             disconnect();
@@ -105,7 +110,7 @@ public class SnapshotDAO {
         
     }
     
-    public static void recoverFromSnapshot(Snapshot snap) {
+    public static void recoverFromSnapshot(Snapshot snap) throws DatabaseOperationFailedException {
         rollback();
         connect();
         String strrecover = "restore database sistema from disk = 'C:\\Users\\lucas\\Desktop\\sharebonito\\projbkps\\" + snap.getUuid() + ".bkp' with replace";
@@ -115,6 +120,7 @@ public class SnapshotDAO {
             conn.createStatement().execute(strrecover);
         } catch (SQLException ex) {
             Logger.getLogger(SnapshotDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DatabaseOperationFailedException();
         }
         finally {
             disconnect();

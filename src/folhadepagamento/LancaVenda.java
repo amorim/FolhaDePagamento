@@ -5,12 +5,16 @@
  */
 package folhadepagamento;
 
+import db.DatabaseOperationFailedException;
 import db.EmployeeDAO;
 import db.SnapshotDAO;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Empregado.Comissionado;
 import models.Empregado.Empregado;
+import util.Util;
 
 /**
  *
@@ -76,9 +80,13 @@ public class LancaVenda extends javax.swing.JFrame implements ISelectUser {
             JOptionPane.showMessageDialog(null, "Inserted value isn't a number. Verify.", "Verify input", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        SnapshotDAO.createSnapshot("Before registering sale for user " + c.getName() + " - " + LocalDateTime.now().toString());
-        EmployeeDAO.lancaVenda(c, venda);
-        JOptionPane.showMessageDialog(null, "Sale registered.");
+        try {
+            SnapshotDAO.createSnapshot("Before registering sale for user " + c.getName() + " - " + LocalDateTime.now().toString());
+            EmployeeDAO.lancaVenda(c, venda);
+            JOptionPane.showMessageDialog(null, "Sale registered.");
+        } catch (DatabaseOperationFailedException ex) {
+            Util.displayDatabaseError(ex.getMessage());
+        }
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
